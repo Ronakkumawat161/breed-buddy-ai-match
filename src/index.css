@@ -8,34 +8,34 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 255 255 255;
-    --foreground: 15 23 42;
+    --background: 0 0% 100%;
+    --foreground: 220 47% 11%;
 
-    --card: 255 255 255;
-    --card-foreground: 15 23 42;
+    --card: 0 0% 100%;
+    --card-foreground: 220 47% 11%;
 
-    --popover: 255 255 255;
-    --popover-foreground: 15 23 42;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 47% 11%;
 
-    --primary: 59 130 246;
-    --primary-foreground: 248 250 252;
-    --primary-glow: 147 197 253;
+    --primary: 220 91% 60%;
+    --primary-foreground: 210 20% 98%;
+    --primary-glow: 220 93% 78%;
 
-    --secondary: 241 245 249;
-    --secondary-foreground: 15 23 42;
+    --secondary: 210 20% 96%;
+    --secondary-foreground: 220 47% 11%;
 
-    --muted: 248 250 252;
-    --muted-foreground: 100 116 139;
+    --muted: 210 20% 98%;
+    --muted-foreground: 215 14% 42%;
 
-    --accent: 249 115 22;
-    --accent-foreground: 255 255 255;
+    --accent: 24 95% 53%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 239 68 68;
-    --destructive-foreground: 255 255 255;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 226 232 240;
-    --input: 226 232 240;
-    --ring: 59 130 246;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 220 91% 60%;
 
     --radius: 0.75rem;
 
