@@ -32,38 +32,64 @@ const Index = () => {
     setIsPaymentOpen(false);
     
     if (quizAnswers) {
-      const match = findBestBreedMatch(quizAnswers);
-      setBreedMatch(match);
-      
-      // Save quiz results to Supabase
       try {
-        const { error } = await supabase
+        // Call AI-powered breed matcher
+        toast({
+          title: "Analyzing your answers...",
+          description: "Our AI is finding your perfect breed match",
+        });
+
+        const { data, error } = await supabase.functions.invoke('ai-breed-matcher', {
+          body: { answers: quizAnswers }
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        const { breedMatch, aiPrompt, aiResponse } = data;
+        setBreedMatch(breedMatch);
+        
+        // Save quiz results to Supabase with AI data
+        const { error: saveError } = await supabase
           .from('quiz_results')
           .insert([{
             user_answers: quizAnswers as any,
-            breed_matched: match.name,
-            breed_description: match.description,
-            ai_response_prompt: `User preferences: ${JSON.stringify(quizAnswers)} | Matched breed: ${match.name} (${match.compatibility}% compatibility)`
+            breed_matched: breedMatch.name,
+            breed_description: breedMatch.description,
+            ai_response_prompt: aiPrompt + '\n\nAI Response: ' + aiResponse
           }]);
 
-        if (error) {
-          console.error('Error saving quiz results:', error);
+        if (saveError) {
+          console.error('Error saving quiz results:', saveError);
           toast({
             title: "Warning",
             description: "Results generated but not saved. Please contact support if needed.",
             variant: "destructive"
           });
         }
+        
+        setIsResultsOpen(true);
+        
+        toast({
+          title: "Perfect Match Found! 🎉",
+          description: `AI recommends: ${breedMatch.name} (${breedMatch.compatibility}% compatibility)`,
+        });
+
       } catch (error) {
-        console.error('Error saving quiz results:', error);
+        console.error('Error getting AI breed recommendation:', error);
+        
+        // Fallback to static matcher
+        const match = findBestBreedMatch(quizAnswers);
+        setBreedMatch(match);
+        setIsResultsOpen(true);
+        
+        toast({
+          title: "Match Found!",
+          description: `Breed recommendation: ${match.name}`,
+          variant: "destructive"
+        });
       }
-      
-      setIsResultsOpen(true);
-      
-      toast({
-        title: "Payment Successful! 🎉",
-        description: `Your perfect breed match has been found: ${match.name}`,
-      });
     }
   };
 
