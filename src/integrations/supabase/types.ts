@@ -14,7 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      quiz_results: {
+        Row: {
+          ai_response_prompt: string | null
+          breed_description: string | null
+          breed_matched: string | null
+          created_at: string
+          id: string
+          user_answers: Json
+        }
+        Insert: {
+          ai_response_prompt?: string | null
+          breed_description?: string | null
+          breed_matched?: string | null
+          created_at?: string
+          id?: string
+          user_answers: Json
+        }
+        Update: {
+          ai_response_prompt?: string | null
+          breed_description?: string | null
+          breed_matched?: string | null
+          created_at?: string
+          id?: string
+          user_answers?: Json
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

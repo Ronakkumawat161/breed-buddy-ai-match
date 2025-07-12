@@ -8,6 +8,7 @@ import PaymentModal from "@/components/PaymentModal";
 import ResultsModal from "@/components/ResultsModal";
 import { findBestBreedMatch, BreedMatch } from "@/utils/breedMatcher";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const [isQuizOpen, setIsQuizOpen] = useState(false);
@@ -27,12 +28,36 @@ const Index = () => {
     setIsPaymentOpen(true);
   };
 
-  const handlePaymentComplete = () => {
+  const handlePaymentComplete = async () => {
     setIsPaymentOpen(false);
     
     if (quizAnswers) {
       const match = findBestBreedMatch(quizAnswers);
       setBreedMatch(match);
+      
+      // Save quiz results to Supabase
+      try {
+        const { error } = await supabase
+          .from('quiz_results')
+          .insert([{
+            user_answers: quizAnswers as any,
+            breed_matched: match.name,
+            breed_description: match.description,
+            ai_response_prompt: `User preferences: ${JSON.stringify(quizAnswers)} | Matched breed: ${match.name} (${match.compatibility}% compatibility)`
+          }]);
+
+        if (error) {
+          console.error('Error saving quiz results:', error);
+          toast({
+            title: "Warning",
+            description: "Results generated but not saved. Please contact support if needed.",
+            variant: "destructive"
+          });
+        }
+      } catch (error) {
+        console.error('Error saving quiz results:', error);
+      }
+      
       setIsResultsOpen(true);
       
       toast({
